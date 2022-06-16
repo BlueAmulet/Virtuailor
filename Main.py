@@ -10,6 +10,7 @@ idaapi.require("GUI")
 
 from vtableAddress import REGISTERS
 
+
 def get_all_functions():
     for func in idautils.Functions():
         print(hex(func), idc.get_func_name(func))
@@ -53,6 +54,5 @@ if __name__ == '__main__':
     gui.exec_()
     if gui.start_line.text != "banana":
         print("Virtuailor - Started")
-        add_bp_to_virtual_calls(int(gui.start_line.text(),16), int(gui.stop_line.text(), 16))
+        add_bp_to_virtual_calls(int(gui.start_line.text(), 16), int(gui.stop_line.text(), 16))
         print("Virtuailor - Finished")
-

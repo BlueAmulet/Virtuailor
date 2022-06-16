@@ -1,6 +1,5 @@
 # Virtuailor - IDAPython tool for C++ vtables reconstruction 
 
-
 Virtuailor is an IDAPython tool that reconstructs vtables for C++ code written for intel architecture, both 32bit and 64bit code and AArch64 (New!).
 The tool constructed from 2 parts, static and dynamic.
 

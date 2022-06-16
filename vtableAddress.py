@@ -8,9 +8,11 @@ import sys, os
 
 idaapi.require("AddBP")
 
-REGISTERS = ['eax', 'ebx', 'ecx', 'edx', 'rax', 'rbx', 'rcx', 'rdx', 'rdi', 'rsi', 'r8', 'r9', 'r10', 'r15', 'X0', 'X1', 'X2', 'X3', 'X4',
-             'X5', 'X6', 'X7', 'X8', 'X9', 'X10', 'X11', 'X12', 'X13', 'X14', 'X15', 'X16', 'X17', 'X18', 'X19', 'X20',
-             'X21', 'X22', 'X23', 'X24', 'X25', 'X26', 'X27', 'X28', 'X29', 'X30', 'X31']
+REGISTERS = [
+    'eax', 'ebx', 'ecx', 'edx', 'rax', 'rbx', 'rcx', 'rdx', 'rdi', 'rsi', 'r8', 'r9', 'r10', 'r15', 'X0', 'X1', 'X2', 'X3', 'X4',
+    'X5', 'X6', 'X7', 'X8', 'X9', 'X10', 'X11', 'X12', 'X13', 'X14', 'X15', 'X16', 'X17', 'X18', 'X19', 'X20', 'X21', 'X22',
+    'X23', 'X24', 'X25', 'X26', 'X27', 'X28', 'X29', 'X30', 'X31'
+]
 
 
 def get_processor_architecture():
@@ -71,16 +73,16 @@ def get_con2_var_or_num(i_cnt, cur_addr):
             opnd2 = idc.print_operand(cur_addr, 1)
             place = opnd2.find(dct_arch["separator"])
             if place != -1:  # if the function is not the first in the vtable
-                register = opnd2[opnd2.find('[') + 1: place]
+                register = opnd2[opnd2.find('[') + 1:place]
                 if opnd2.find('*') == -1:
-                    offset = opnd2[place + dct_arch["val_offset"]: opnd2.find(']')]
+                    offset = opnd2[place + dct_arch["val_offset"]:opnd2.find(']')]
                 else:
                     offset = "*"
                 return register, offset, cur_addr
             else:
                 offset = "0"
                 if opnd2.find(']') != -1:
-                    register = opnd2[opnd2.find('[') + 1: opnd2.find(']')]
+                    register = opnd2[opnd2.find('[') + 1:opnd2.find(']')]
                 else:
                     register = opnd2
                 return register, offset, cur_addr
@@ -89,7 +91,7 @@ def get_con2_var_or_num(i_cnt, cur_addr):
             # In case the code has CFG -> ignores the function call before the virtual calls
             if "guard_check_icall_fptr" not in intr_func_name:
                 if "nullsub" not in intr_func_name:
-                    # intr_func_name = idc.Demangle(intr_func_name, idc.GetLongPrm(idc.INF_SHORT_DN))
+                    #intr_func_name = idc.Demangle(intr_func_name, idc.GetLongPrm(idc.INF_SHORT_DN))
                     print("Warning! At address 0x%08x: The vtable assignment might be in another function (Maybe %s),"
                           " could not place BP." % (virt_call_addr, intr_func_name))
                 cur_addr = start_addr
@@ -156,7 +158,7 @@ def write_vtable2file(start_addr):
         set_bp = False
     finally:
         if set_bp:
-            # start_addr = start_addr - idc.SegStart(start_addr)
+            #start_addr = start_addr - idc.SegStart(start_addr)
             if reg_vtable in REGISTERS:
                 cond = get_bp_condition(start_addr, reg_vtable, offset)
     return cond, bp_address
