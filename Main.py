@@ -32,7 +32,7 @@ def add_bp_to_virtual_calls(cur_addr, end):
         if cur_addr == idc.BADADDR:
             break
         elif idc.print_insn_mnem(cur_addr) == 'call' or idc.print_insn_mnem(cur_addr) == 'BLR':
-            if True in [idc.print_operand(cur_addr, 0).find(reg) != -1 for reg in REGISTERS]:  # idc.GetOpnd(cur_addr, 0) in REGISTERS:
+            if True in [idc.print_operand(cur_addr, 0).find(reg) != -1 for reg in REGISTERS]:  # idc.print_operand(cur_addr, 0) in REGISTERS:
                 cond, bp_address = vtableAddress.write_vtable2file(cur_addr)
                 if cond != '':
                     bp_vtable = AddBP.add(bp_address, cond)
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     end_addr_range = ida_ida.inf_get_max_ea()
     oldTo = idaapi.set_script_timeout(0)
     # Initializes the GUI: Deletes the 0x in the beginning and the L at the end:
-    gui = GUI.VirtuailorBasicGUI(set_values, {'start': hex(start_addr_range)[2:], 'end': hex(end_addr_range)[2:]})
+    gui = GUI.VirtuailorBasicGUI(set_values, {'start': hex(start_addr_range)[2:].rstrip('L'), 'end': hex(end_addr_range)[2:].rstrip('L')})
     gui.exec_()
     if gui.start_line.text != "banana":
         print("Virtuailor - Started")

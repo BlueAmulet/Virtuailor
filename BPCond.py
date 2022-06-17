@@ -17,9 +17,9 @@ def get_fixed_name_for_object(address, prefix=""):
     v_func_name = idc.get_func_name(int(address))
     calc_func_name = int(address) - idc.get_segm_start(int(address))
     if v_func_name[:4] == "sub_":
-        v_func_name = prefix + str(calc_func_name)
+        v_func_name = prefix + '{:X}'.format(calc_func_name)
     elif v_func_name == "":
-        v_func_name = prefix + str(calc_func_name)  # The name will be the offset from the beginning of the segment
+        v_func_name = prefix + '{:X}'.format(calc_func_name)  # The name will be the offset from the beginning of the segment
     return v_func_name
 
 
@@ -47,12 +47,12 @@ def add_comment_to_struct_members(struct_id, vtable_func_offset, start_address):
     cur_cmt = idc.get_member_cmt(struct_id, vtable_func_offset, 1)
     new_cmt = ""
     if cur_cmt:
-        if cur_cmt[:23] != "Was called from offset:":
+        if cur_cmt[:23] != "Was called from offset:" or hex(start_address) in cur_cmt:
             new_cmt = cur_cmt
         else:
-            new_cmt = cur_cmt + ", " + start_address
+            new_cmt = cur_cmt + ", " + hex(start_address)
     else:
-        new_cmt = "Was called from offset: " + start_address
+        new_cmt = "Was called from offset: " + hex(start_address)
     succ1 = idc.set_member_cmt(struct_id, vtable_func_offset, new_cmt, 1)
     return succ1
 
@@ -143,6 +143,6 @@ if offset == "*":
 try:
     do_logic(virtual_call_addr, register_vtable, offset)
 except:
-    print("Error! at BP address: 0x%08x", idc.get_reg_value("eip"))
+    print("Error! at BP address: 0x%08x" % idc.get_reg_value("eip"))
 
 #idc.add_cref(0x000000013FA72ABB, 0x000000013FA71177, idc.XREF_USER | idc.fl_F)
